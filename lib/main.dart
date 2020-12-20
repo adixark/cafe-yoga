@@ -1,3 +1,4 @@
+import 'package:cafe_yoga/pages/signup_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,6 +13,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return MaterialApp(
+      title: "cafe_yoga",
+      debugShowCheckedModeBanner: false,
+      home: SignupPage(),
+    );
   }
 }
