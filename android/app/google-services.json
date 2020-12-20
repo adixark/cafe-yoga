@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "674264758769",
+    "project_id": "jatin-cafe-yoga",
+    "storage_bucket": "jatin-cafe-yoga.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:674264758769:android:de49a7ad3c4e2e58f42c50",
+        "android_client_info": {
+          "package_name": "com.example.cafe_yoga"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "674264758769-hh8lo9uucfo1kgr8n6ds3fkorqtu4hht.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJQGAChjJh1daQLJ0p5WVE66JuyGu_gMg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "674264758769-hh8lo9uucfo1kgr8n6ds3fkorqtu4hht.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
