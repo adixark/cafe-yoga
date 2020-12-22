@@ -1,8 +1,9 @@
-import 'package:cafe_yoga/Models/api_services.dart';
+import 'package:cafe_yoga/api_services.dart';
 import 'package:cafe_yoga/Models/customer.dart';
 import 'package:cafe_yoga/utils/form_helper.dart';
 import 'package:cafe_yoga/utils/progressHUD.dart';
 import 'package:flutter/material.dart';
+import 'package:cafe_yoga/utils/validator_service.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -14,7 +15,7 @@ class _SignupPageState extends State<SignupPage> {
   CustomerModel model;
   GlobalKey<FormState> globalKey = GlobalKey<FormState>();
   bool hidePassword = true;
-  bool isApiCallProcess = true;
+  bool isApiCallProcess = false;
 
   @override
   void initState() {
@@ -32,8 +33,7 @@ class _SignupPageState extends State<SignupPage> {
         title: Text("SignUp"),
       ),
       body: ProgressHUD(
-        key: globalKey,
-        child: new Form(child: formUI()),
+        child: new Form(key: globalKey, child: formUI()),
         inAsyncCall: isApiCallProcess,
         opacity: 0.3,
       ),
@@ -65,7 +65,7 @@ class _SignupPageState extends State<SignupPage> {
                 FormHelper.fieldLabel("Last Name"),
                 FormHelper.textInput(
                     context,
-                    model.firstName,
+                    model.lastName,
                     (value) => {
                           this.model.lastName = value,
                         }, onValidate: (value) {
@@ -81,7 +81,8 @@ class _SignupPageState extends State<SignupPage> {
                   if (value.toString().isEmpty) {
                     return "Please Enter email-id";
                   }
-                  if (value.toString().isNotEmpty && !value.isValidEmail()) {}
+                  if (value.toString().isNotEmpty &&
+                      !value.toString().isValidEmail()) {}
                   return null;
                 }),
                 FormHelper.fieldLabel("Password"),
@@ -114,32 +115,40 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 new Center(
                     child: FormHelper.saveButton("Register", () {
-                  if (ValidateAndSave()) {
+                  if (validateAndSave()) {
                     print(model.toJson());
                     setState(() {
                       isApiCallProcess = true;
                     });
 
-                    apiService.createCustomer(model).then((ret) =>
+                    apiService.createCustomer(model).then((ret) {
+                      setState(() {
+                        isApiCallProcess = false;
+                      });
+
+                      if (ret) {
                         FormHelper.showMessage(
                             context, "Welcome", "Registrarion Successful", "OK",
                             () {
                           Navigator.of(context).pop();
-                        }));
-                  } else {
-                    FormHelper.showMessage(
-                        context, "Error", "Email already registred", "OK", () {
-                      Navigator.of(context).pop();
+                        });
+                      } else {
+                        FormHelper.showMessage(
+                            context, "Error", "Email already registred", "OK",
+                            () {
+                          Navigator.of(context).pop();
+                        });
+                      }
                     });
                   }
-                })),
+                }))
               ],
             )),
       ),
     ));
   }
 
-  bool ValidateAndSave() {
+  bool validateAndSave() {
     final form = globalKey.currentState;
     if (form.validate()) {
       form.save();
