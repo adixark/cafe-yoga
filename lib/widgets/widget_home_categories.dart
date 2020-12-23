@@ -1,4 +1,5 @@
 import 'package:cafe_yoga/api_services.dart';
+import 'package:cafe_yoga/pages/product_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cafe_yoga/Models/category.dart' as categoryModel;
 
@@ -78,40 +79,53 @@ class _WidgetCategoriesState extends State<WidgetCategories> {
           itemCount: categories.length,
           itemBuilder: (context, index) {
             var data = categories[index];
-            return Padding(
-              padding: EdgeInsets.all(5),
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    width: 80,
-                    height: 80,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black12,
-                              offset: Offset(0, 5),
-                              blurRadius: 15),
-                        ],
-                        image: DecorationImage(
-                            image: NetworkImage(
-                              data.image.url,
-                            ),
-                            fit: BoxFit.cover)),
+
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductPage(
+                      categoryId: data.categoryId,
+                    ),
                   ),
-                  Row(
-                    children: [
-                      Text(data.categoryName.toString()),
-                      Icon(
-                        Icons.keyboard_arrow_right,
-                        size: 10,
-                      )
-                    ],
-                  )
-                ],
+                );
+              },
+              child: Padding(
+                padding: EdgeInsets.all(5),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.all(10),
+                      width: 80,
+                      height: 80,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(0, 5),
+                                blurRadius: 15),
+                          ],
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                data.image.url,
+                              ),
+                              fit: BoxFit.cover)),
+                    ),
+                    Row(
+                      children: [
+                        Text(data.categoryName.toString()),
+                        Icon(
+                          Icons.keyboard_arrow_right,
+                          size: 10,
+                        )
+                      ],
+                    )
+                  ],
+                ),
               ),
             );
           }),

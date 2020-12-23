@@ -5,6 +5,7 @@ import 'package:cafe_yoga/Models/customer.dart';
 import 'package:cafe_yoga/Models/product.dart';
 import 'package:cafe_yoga/config.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'Models/login_model.dart';
 
 class APIService {
@@ -87,20 +88,51 @@ class APIService {
     return data;
   }
 
-  Future<List<Product>> getProducts(String tagId) async {
+  Future<List<Product>> getProducts({
+    int pageNumber,
+    int pageSize,
+    String strSearch,
+    String tagName,
+    String categoryId,
+    String sortBy,
+    String sortOrder = "asc",
+  }) async {
     List<Product> data = new List<Product>();
 
     try {
+      String parameter = "";
+      if (strSearch != null) {
+        parameter += "&search=$strSearch";
+      }
+      if (pageSize != null) {
+        parameter += "&per_page=$pageSize";
+      }
+      if (pageNumber != null) {
+        parameter += "&page=$pageNumber";
+      }
+      if (tagName != null) {
+        parameter += "&tag=$tagName";
+      }
+      if (categoryId != null) {
+        parameter += "&category=$categoryId";
+      }
+      if (sortBy != null) {
+        parameter += "&orderby=$sortBy";
+      }
+      if (sortOrder != null) {
+        parameter += "&order=$sortOrder";
+      }
+
       String url = Config.url +
           Config.productsUrl +
-          "?consumer_key=${Config.key}&consumer_secret=${Config.secret}&tag=$tagId";
+          "?consumer_key=${Config.key}&consumer_secret=${Config.secret}${parameter.toString()}";
+      print(url);
       var response = await Dio().get(
         url,
         options: new Options(
           headers: {HttpHeaders.contentTypeHeader: "application/json"},
         ),
       );
-      print(response);
       if (response.statusCode == 200) {
         data = (response.data as List)
             .map(

@@ -63,7 +63,7 @@ class _WidgetHomeProductsState extends State<WidgetHomeProducts> {
 
   Widget _productslist() {
     return new FutureBuilder(
-      future: apiService.getProducts(this.widget.tagId),
+      future: apiService.getProducts(tagName: this.widget.tagId),
       builder: (
         BuildContext context,
         AsyncSnapshot<List<Product>> model, //ignore xare
@@ -80,84 +80,94 @@ class _WidgetHomeProductsState extends State<WidgetHomeProducts> {
   }
 
   Widget _buildlist(List<Product> items) {
-    return Container(
-      height: 210,
-      alignment: Alignment.centerLeft,
-      child: ListView.builder(
-          shrinkWrap: true,
-          physics: ClampingScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            var data = items[index];
-            return Padding(
-              padding: EdgeInsets.all(5),
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    width: 120,
-                    height: 120,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black12,
-                              offset: Offset(0, 5),
-                              blurRadius: 15),
-                        ],
-                        image: DecorationImage(
-                            image: NetworkImage(
-                              data.images[0].src,
-                            ),
-                            fit: BoxFit.cover)),
-                  ),
-                  Container(
-                    width: 130,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      data.name,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetail(),
+          ),
+        );
+      },
+      child: Container(
+        height: 210,
+        alignment: Alignment.centerLeft,
+        child: ListView.builder(
+            shrinkWrap: true,
+            physics: ClampingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              var data = items[index];
+              return Padding(
+                padding: EdgeInsets.all(5),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.all(10),
+                      width: 120,
+                      height: 120,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(0, 5),
+                                blurRadius: 15),
+                          ],
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                data.images[0].src,
+                              ),
+                              fit: BoxFit.cover)),
+                    ),
+                    Container(
+                      width: 130,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        data.name,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                      width: 130,
-                      margin: EdgeInsets.only(top: 4, left: 4),
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 10),
-                        child: Row(
-                          children: [
-                            Text(
-                              "₹ ${data.regularPrice}",
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  decoration: TextDecoration.lineThrough,
-                                  color: Colors.redAccent,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "₹ ${data.salePrice}",
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      )),
-                ],
-              ),
-            );
-          }),
+                    Container(
+                        width: 130,
+                        margin: EdgeInsets.only(top: 4, left: 4),
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Row(
+                            children: [
+                              Text(
+                                "₹ ${data.regularPrice}",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    decoration: TextDecoration.lineThrough,
+                                    color: Colors.redAccent,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "₹ ${data.salePrice}",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        )),
+                  ],
+                ),
+              );
+            }),
+      ),
     );
   }
 }
