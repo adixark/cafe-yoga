@@ -3,20 +3,21 @@ import 'package:cafe_yoga/api_services.dart';
 import 'package:flutter/material.dart';
 import 'package:cafe_yoga/pages/product_details.dart';
 
-class WidgetHomeProducts extends StatefulWidget {
+class WidgetRelatedProducts extends StatefulWidget {
   @override
-  _WidgetHomeProductsState createState() => _WidgetHomeProductsState();
+  _WidgetRelatedProductsState createState() => _WidgetRelatedProductsState();
 
   String labelName;
-  String tagId;
+  List<int> products;
 
-  WidgetHomeProducts({Key key, this.labelName, this.tagId});
+  WidgetRelatedProducts({this.labelName, this.products});
 }
 
-class _WidgetHomeProductsState extends State<WidgetHomeProducts> {
+class _WidgetRelatedProductsState extends State<WidgetRelatedProducts> {
   APIService apiService;
   @override
   void initState() {
+    print(this.widget.products);
     // TODO: implement initState
     apiService = new APIService();
     super.initState();
@@ -64,7 +65,7 @@ class _WidgetHomeProductsState extends State<WidgetHomeProducts> {
 
   Widget _productslist() {
     return new FutureBuilder(
-      future: apiService.getProducts(tagName: this.widget.tagId),
+      future: apiService.getProducts(productsIds: this.widget.products),
       builder: (
         BuildContext context,
         AsyncSnapshot<List<Product>> model, //ignore xare
