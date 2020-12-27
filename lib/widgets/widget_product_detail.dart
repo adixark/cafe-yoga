@@ -1,15 +1,24 @@
+import 'package:cafe_yoga/Models/cart_request_model.dart';
 import 'package:cafe_yoga/Models/product.dart';
+import 'package:cafe_yoga/Models/variable_product.dart';
+import 'package:cafe_yoga/provider/cart_provider.dart';
+import 'package:cafe_yoga/provider/loader_provider.dart';
 import 'package:cafe_yoga/utils/cutom_stepper.dart';
 import 'package:cafe_yoga/utils/expand_text.dart';
 import 'package:cafe_yoga/widgets/widget_related_product.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetailWidget extends StatelessWidget {
-  ProductDetailWidget({Key key, this.data}) : super(key: key);
+  ProductDetailWidget({Key key, this.data, this.variableProduct})
+      : super(key: key);
   int quantity = 0;
 
+  CartProducts cartProducts = new CartProducts();
+
   Product data;
+  List<VariableProduct> variableProduct;
   final CarouselController carouselController = CarouselController();
 
   @override
@@ -59,15 +68,33 @@ class ProductDetailWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(data.attributes != null && data.attributes.length > 0
-                        ? data.attributes[0].options.join("-").toString() +
-                            "" +
-                            data.attributes[0].name
-                        : ""),
+                    Visibility(
+                      visible: data.type != "variable",
+                      child: Text(
+                        data.attributes != null && data.attributes.length > 0
+                            ? (data.attributes[0].options.join("-").toString() +
+                                "" +
+                                data.attributes[0].name)
+                            : "",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    Visibility(
+                        visible: data.type == "variable",
+                        child: selectDropdown(
+                            context, variableProduct, this.variableProduct,
+                            (VariableProduct value) {
+                          this.data.price = value.price;
+                          this.data.variableProduct = value;
+                        })),
                     Row(
                       children: [
                         Text(
-                          '₹ ${data.salePrice}',
+                          '₹ ${data.price}',
                           style: TextStyle(
                               fontSize: 25,
                               color: Colors.black,
@@ -101,11 +128,26 @@ class ProductDetailWidget extends StatelessWidget {
                       stepValue: 1,
                       value: this.quantity,
                       onChanged: (value) {
-                        print(value);
+                        cartProducts.quantity = value;
                       },
                     ),
                     FlatButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Provider.of<LoaderProvider>(context, listen: false)
+                            .setLoadingStatus(true);
+                        var cartProvider =
+                            Provider.of<CartProvider>(context, listen: false);
+
+                        cartProducts.productId = data.id;
+                        cartProducts.variationId = data.variableProduct != null
+                            ? data.variableProduct.id
+                            : 0;
+                        cartProvider.addToCart(cartProducts, (val) {
+                          Provider.of<LoaderProvider>(context, listen: false)
+                              .setLoadingStatus(false);
+                          print(val);
+                        });
+                      },
                       child: Text(
                         "Add to Cart",
                         style: TextStyle(color: Colors.white),
@@ -192,6 +234,72 @@ class ProductDetailWidget extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  static Widget selectDropdown(BuildContext context, Object initialValue,
+      dynamic data, Function onchanged,
+      {Function onValidate}) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Container(
+        height: 75,
+        width: 100,
+        padding: EdgeInsets.only(top: 5),
+        child: new DropdownButtonFormField<VariableProduct>(
+            hint: new Text("Select"),
+            decoration: fieldDecoration(
+              context: context,
+            ),
+            value: null,
+            //todo: this dropdown value needs to be fixed
+            isDense: true,
+            items: data != null
+                ? data.map<DropdownMenuItem<VariableProduct>>(
+                    (VariableProduct data) {
+                    return DropdownMenuItem<VariableProduct>(
+                      value: data,
+                      child: new Text(
+                        data.attributes.first.option +
+                            " " +
+                            data.attributes.first.name,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    );
+                  }).toList()
+                : null,
+            onChanged: (VariableProduct newValue) {
+              FocusScope.of(context).requestFocus(new FocusNode());
+              onchanged(newValue);
+            }),
+      ),
+    );
+  }
+
+  static InputDecoration fieldDecoration({
+    BuildContext context,
+    String hintText,
+    String helperText,
+    Widget prefixIcon,
+    Widget suffixIcon,
+  }) {
+    return InputDecoration(
+      contentPadding: EdgeInsets.all(6),
+      hintText: hintText,
+      prefixIcon: prefixIcon,
+      suffixIcon: suffixIcon,
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Theme.of(context).primaryColor,
+          width: 1,
+        ),
+      ),
+      border: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Theme.of(context).primaryColor,
+          width: 1,
+        ),
       ),
     );
   }

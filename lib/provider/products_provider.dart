@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import 'package:cafe_yoga/Models/product.dart';
-import 'package:cafe_yoga/api_services.dart';
+import 'package:cafe_yoga/utils/api_services.dart';
 
 class SortBy {
   String value;

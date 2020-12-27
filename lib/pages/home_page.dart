@@ -1,5 +1,9 @@
+import 'package:cafe_yoga/pages/cart_page.dart';
 import 'package:cafe_yoga/pages/dashboard_page.dart';
 import 'package:flutter/material.dart';
+import 'package:cafe_yoga/widgets/widget_payment_method_list.dart';
+import 'package:cafe_yoga/Models/payment_method.dart';
+import 'package:cafe_yoga/pages/payment_screen.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,9 +13,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Widget> _widgetList = [
     DashboardPage(),
+    CartPage(),
     DashboardPage(),
-    DashboardPage(),
-    DashboardPage()
+    PaymentScreen(),
   ];
 
   int _index = 0;
@@ -62,11 +66,6 @@ class _HomePageState extends State<HomePage> {
           color: Colors.white,
         ),
         SizedBox(width: 15),
-        Icon(
-          Icons.shopping_cart,
-          color: Colors.white,
-        ),
-        SizedBox(width: 10),
       ],
     );
   }

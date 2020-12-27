@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:cafe_yoga/Models/variable_product.dart';
 
 class Product {
   int id;
@@ -14,20 +15,26 @@ class Product {
   List<Categories> categories;
   List<Attributes> attributes;
   List<int> relatedIds;
+  String type;
+  VariableProduct variableProduct;
 
-  Product(
-      {this.shortDescription,
-      this.description,
-      this.id,
-      this.images,
-      this.name,
-      this.price,
-      this.regularPrice,
-      this.salePrice,
-      this.sku,
-      this.stockStatus,
-      this.attributes,
-      this.relatedIds});
+  Product({
+    this.id,
+    this.name,
+    this.description,
+    this.shortDescription,
+    this.sku,
+    this.price,
+    this.regularPrice,
+    this.salePrice,
+    this.stockStatus,
+    this.images,
+    this.categories,
+    this.attributes,
+    this.relatedIds,
+    this.type,
+    this.variableProduct,
+  });
 
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -41,6 +48,7 @@ class Product {
         json['sale_price'] != "" ? json['sale_price'] : json['regular_price'];
     stockStatus = json['stock_status'];
     relatedIds = json['cross_sell_ids'].cast<int>();
+    type = json['type'];
 
     if (json['categories'] != null) {
       categories = new List<Categories>();
@@ -63,16 +71,17 @@ class Product {
   }
 
   calculateDiscount() {
+    double disPercent = 0;
     if (regularPrice != "") {
       double regularPrice = double.parse(this.regularPrice);
       double salePrice =
           this.salePrice != "" ? double.parse(this.salePrice) : regularPrice;
       double discount = regularPrice - salePrice;
-      double disPercentage = (discount / regularPrice) * 100;
+      disPercent = (discount / regularPrice) * 100;
 
-      return disPercentage.round();
+      return disPercent.round();
     }
-    return 0;
+    return disPercent;
   }
 }
 
