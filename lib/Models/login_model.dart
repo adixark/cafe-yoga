@@ -13,7 +13,7 @@ class LoginResponseModel {
     statusCode = json['statuscode'];
     code = json['code'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'].length > 0 ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {

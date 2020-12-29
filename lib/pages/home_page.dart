@@ -1,11 +1,20 @@
+import 'package:cafe_yoga/pages/my_account.dart';
+import 'package:flutter/material.dart';
+
+import 'package:cafe_yoga/Models/payment_method.dart';
 import 'package:cafe_yoga/pages/cart_page.dart';
 import 'package:cafe_yoga/pages/dashboard_page.dart';
-import 'package:flutter/material.dart';
-import 'package:cafe_yoga/widgets/widget_payment_method_list.dart';
-import 'package:cafe_yoga/Models/payment_method.dart';
 import 'package:cafe_yoga/pages/payment_screen.dart';
+import 'package:cafe_yoga/widgets/widget_payment_method_list.dart';
 
 class HomePage extends StatefulWidget {
+  int selectedPage;
+
+  HomePage({
+    Key key,
+    this.selectedPage,
+  }) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -15,10 +24,18 @@ class _HomePageState extends State<HomePage> {
     DashboardPage(),
     CartPage(),
     DashboardPage(),
-    PaymentScreen(),
+    MyAccount(),
   ];
 
   int _index = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    if (this.widget.selectedPage != null) {
+      _index = this.widget.selectedPage;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

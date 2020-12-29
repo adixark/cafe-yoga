@@ -34,7 +34,7 @@ class PaymentMethodList {
           route: "/RazorPay",
           onTap: () {
             RazorPaymentService razorPaymentService = new RazorPaymentService();
-            razorPaymentService.initPaymentGateway();
+            razorPaymentService.initPaymentGateway(context);
             razorPaymentService.getPayment(context);
           },
           isRouteRedirect: false),

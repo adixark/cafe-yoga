@@ -1,12 +1,15 @@
 import 'package:cafe_yoga/pages/base_page.dart';
 import 'package:cafe_yoga/pages/cart_page.dart';
 import 'package:cafe_yoga/pages/home_page.dart';
+import 'package:cafe_yoga/pages/orders_page.dart';
+import 'package:cafe_yoga/pages/paypal_payment.dart';
 import 'package:cafe_yoga/pages/product_details.dart';
 import 'package:cafe_yoga/pages/product_page.dart';
 import 'package:cafe_yoga/pages/signup_page.dart';
 import 'package:cafe_yoga/pages/login_page.dart';
 import 'package:cafe_yoga/provider/cart_provider.dart';
 import 'package:cafe_yoga/provider/loader_provider.dart';
+import 'package:cafe_yoga/provider/order_provider.dart';
 import 'package:cafe_yoga/provider/products_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -41,11 +44,18 @@ class _MyAppState extends State<MyApp> {
             create: (context) => CartProvider(),
             child: CartPage(),
           ),
+          ChangeNotifierProvider(
+            create: (context) => OrderProvider(),
+            child: OrdersPage(),
+          ),
         ],
         child: MaterialApp(
           title: "cafe_yoga",
           debugShowCheckedModeBanner: false,
           home: HomePage(),
+          routes: <String, WidgetBuilder>{
+            '/PayPal': (BuildContext context) => new PaypalPaymentScreen()
+          },
           theme: ThemeData(
             fontFamily: "ProductSans",
             primaryColor: Colors.white,

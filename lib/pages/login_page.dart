@@ -1,3 +1,5 @@
+import 'package:cafe_yoga/pages/home_page.dart';
+import 'package:cafe_yoga/shared_service.dart';
 import 'package:cafe_yoga/utils/form_helper.dart';
 import 'package:cafe_yoga/utils/progressHUD.dart';
 import 'package:flutter/material.dart';
@@ -138,15 +140,27 @@ class _LoginPageState extends State<LoginPage> {
                                 apiService
                                     .loginCustomer(username, password)
                                     .then((ret) {
-                                  if (ret != null) {
-                                    setState(() {
-                                      isApiCallProcess = false;
-                                    });
+                                  setState(() {
+                                    isApiCallProcess = false;
+                                  });
+                                  if (ret.success) {
                                     FormHelper.showMessage(context, "Welcome",
-                                        "Login Successfull", "Ok", () {});
+                                        "Login Successfull", "Ok", () {
+                                      Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => HomePage(
+                                              selectedPage: 3,
+                                            ),
+                                          ),
+                                          ModalRoute.withName("/Home"));
+                                    });
+                                    SharedService.setLoginDetails(ret);
                                   } else {
                                     FormHelper.showMessage(context, "Error",
-                                        "Invalid Credentials", "Ok", () {});
+                                        "Invalid Credentials", "Ok", () {
+                                      Navigator.of(context).pop();
+                                    });
                                   }
                                 });
                               }

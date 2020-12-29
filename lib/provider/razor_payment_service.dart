@@ -1,12 +1,19 @@
+import 'dart:js';
+
+import 'package:cafe_yoga/Models/order.dart';
 import 'package:cafe_yoga/provider/cart_provider.dart';
+import 'package:cafe_yoga/widgets/widget_order_success.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class RazorPaymentService {
+  BuildContext _buildContext;
   Razorpay _razorpay;
 
-  initPaymentGateway() {
+  initPaymentGateway(BuildContext buildContext) {
+    this._buildContext = buildContext;
     _razorpay = new Razorpay();
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, externalWallet);
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, paymentSuccessHandler);
@@ -19,6 +26,19 @@ class RazorPaymentService {
 
   void paymentSuccessHandler(PaymentSuccessResponse response) {
     print("SUCCESS: " + response.paymentId.toString());
+    var orderProvider = Provider.of<CartProvider>(_buildContext, listen: false);
+    OrderModel orderModel = new OrderModel();
+    orderModel.paymentMethod = "razorpay";
+    orderModel.paymentMethodTitle = "razorpay";
+    orderModel.setPaid = true;
+    orderModel.transactionId = response.paymentId.toString();
+
+    orderProvider.processOrder(orderModel);
+
+    Navigator.pushAndRemoveUntil(
+        _buildContext,
+        MaterialPageRoute(builder: (context) => OrderSuccessWidget()),
+        ModalRoute.withName("/OrderSuccess"));
   }
 
   void paymentError(PaymentFailureResponse response) {

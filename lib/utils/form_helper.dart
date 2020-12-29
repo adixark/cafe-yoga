@@ -10,6 +10,7 @@ class FormHelper {
     obscureText: false,
     Function onValidate,
     Widget prefixIcon,
+    bool readOnly = false,
     Widget suffixIcon,
   }) {
     return TextFormField(
@@ -20,6 +21,7 @@ class FormHelper {
         "",
         suffixIcon: suffixIcon,
       ),
+      readOnly: readOnly,
       obscureText: obscureText,
       maxLines: !isTextArea ? 1 : 3,
       keyboardType: isNumberInput ? TextInputType.number : TextInputType.text,
@@ -47,13 +49,13 @@ class FormHelper {
       suffixIcon: suffixIcon,
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(
-          color: Theme.of(context).primaryColor,
+          color: Colors.grey,
           width: 1,
         ),
       ),
       border: OutlineInputBorder(
         borderSide: BorderSide(
-          color: Theme.of(context).primaryColor,
+          color: Colors.grey,
           width: 1,
         ),
       ),
@@ -137,5 +139,12 @@ class FormHelper {
         );
       },
     );
+  }
+
+  static Widget fieldLabelValue(BuildContext context, String labelName) {
+    return FormHelper.textInput(context, labelName, (value) => {},
+        onValidate: (value) {
+      return null;
+    }, readOnly: true);
   }
 }

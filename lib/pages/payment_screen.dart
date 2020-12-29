@@ -1,19 +1,25 @@
+import 'package:cafe_yoga/pages/checkout_base.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cafe_yoga/Models/payment_method.dart';
 import 'package:cafe_yoga/widgets/widget_payment_method_list.dart';
-import 'package:cafe_yoga/pages/base_page.dart';
 
-class PaymentScreen extends BasePage {
+class PaymentScreen extends CheckOutBasePage {
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
 }
 
-class _PaymentScreenState extends BasePageState<PaymentScreen> {
+class _PaymentScreenState extends CheckOutBasePageState<PaymentScreen> {
   PaymentMethodList list;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    this.currentPage = 1;
+  }
+
+  @override
+  Widget pageUI() {
     list = new PaymentMethodList(context);
     return SingleChildScrollView(
       child: Column(
